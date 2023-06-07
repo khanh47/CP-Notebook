@@ -17,7 +17,7 @@ struct ConvexHullTrick {
             idx = sz - 1;
         while (idx < sz - 1 && ord(env[idx + 1], x) <= ord(env[idx], x))
             idx++;
-        return val(env[idx], x);
+        return ord(env[idx], x);
     }
 
     void add(ll a, ll b){

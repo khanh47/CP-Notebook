@@ -8,3 +8,7 @@ void buildHash(string key){
         pw[i] = muti(pw[i - 1], BASE);
     }
 }
+
+ll getHash(int left, int right){
+    return (Hash[right] - muti(Hash[left - 1], pw[right - left + 1]) + 1LL * MOD * MOD) % MOD;
+}
