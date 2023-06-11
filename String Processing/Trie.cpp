@@ -1,43 +1,65 @@
+const int AL = 26;
 
-struct TrieNode {
-    TrieNode *child[26];
-    bool isWord;
-};
+struct Trie {
+    struct Node {
+        Node *child[AL];
+        // num child and num word end at this node
+        int cnt, word;
+    };
 
-struct TrieNode *createNode(void) {
-    TrieNode *pNode = new TrieNode;
-
-    pNode -> isWord = false;
-    FOR (i, 0, 25)
-        pNode -> child[i] = NULL;
-
-    return pNode;
-}
-
-void trieInsert(TrieNode *root, char key[]){
-    TrieNode *pCrawl = root;
-    int len = strlen(key);
-
-    FOR (i, 0, len - 1){
-        int idx = key[i] - 'a';
-        if (!pCrawl -> child[idx])
-            pCrawl -> child[idx] = createNode();
-        pCrawl = pCrawl -> child[idx];
+    Node *newNode() {
+        Node *res = new Node;
+        res -> cnt = res -> word = 0;
+        FOR (i, 0, AL - 1)
+            res -> child[i] = NULL;
+        return res;
     }
 
-    pCrawl -> isWord = true;
-}
+    Node *root = newNode();
 
-bool trieFind(TrieNode *root, char key[]){
-    int len = strlen(key);
-    struct TrieNode *pCrawl = root;
-
-    FOR (i, 0, len - 1){
-        int idx = key[i] - 'a';
-        if (!pCrawl -> child[idx])
-            return false;
-        pCrawl = pCrawl -> child[idx];
+    void add(string s){
+        Node *it = root;
+        for (char c : s){
+            int idx = c - 'a';
+            if (!it -> child[idx])
+                it -> child[idx] = newNode();
+            it = it -> child[idx];
+            it -> cnt++;
+        }
+        it -> word++;
     }
 
-    return (pCrawl -> isWord);
-}
+    bool Find(string s){
+        Node *it = root;
+        for (char c : s){
+            int idx = c - 'a';
+            if (!it -> child[idx])
+                return 0;
+            it = it -> child[idx];
+        }
+        return it -> word;
+    }
+
+    bool reDrop(Node *u, string s, int i){
+        if (i != s.size()){
+            int idx = s[i] - 'a';
+            if (reDrop(u -> child[idx], s, i + 1))
+                u -> child[idx] = NULL;
+        }else
+            u -> word--;
+        if (u != root){
+            u -> cnt--;
+            if (u -> cnt == 0){
+                delete(u);
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    void drop(string s){
+        if (!Find(s))
+            return;
+        reDrop(root, s, 0);
+    }
+} trie;

@@ -1,205 +1,103 @@
-#include <bits/stdc++.h>
-using namespace std;
+// Tested: 
+// https://oj.vnoi.info/problem/cppset 
+// Wanna get more clear code? go to this link
+// https://ideone.com/53t3Eh
 
-struct Skip_lists;
-struct Column;
+const int LG = 20;
+
 struct Cell;
 
-struct Skip_lists {
-	static const int MAX_LEVEL = 20;
-	Column *head, *tail;
-
-	Skip_lists();
-	bool empty();
-	Column *lower_bound(int);
-	Column *upper_bound(int);
-	void insert(int);
-	void erase(int);
-};
-
 struct Column {
-	int value;
-	vector<Cell> cells;
+    int val;
+    vector<Cell> cells;
 };
 
 struct Cell {
-	Column *previous_column, *next_column;
+    Column *preCol, *nextCol;
 };
 
-Skip_lists::Skip_lists() {
-	head = new Column;
-	tail = new Column;
-	head->value = 0;
-	tail->value = 0;
-	for(int i = 0; i < MAX_LEVEL; i++) {
-		head->cells.push_back((Cell){NULL, tail});
-		tail->cells.push_back((Cell){head, NULL});
-	}
-}
+struct SkipList {
 
-bool Skip_lists::empty() {
-	return head->cells[0].next_column == tail;
-}
+    Column *head, *tail;
 
-Column *Skip_lists::lower_bound(int value) {
-	Column *iter = head;
-	for(int level = MAX_LEVEL - 1; level >= 0; level--) {
-		while(iter->cells[level].next_column != tail && iter->cells[level].next_column->value < value) {
-			iter = iter->cells[level].next_column;
-		}
-	}
-	return iter->cells[0].next_column;
-}
+    SkipList(){
+        head = new Column;
+        tail = new Column;
+        head -> val = tail -> val = 0;
+        FOR (i, 0, LG - 1)
+            head -> cells.pb({NULL, tail}),
+            tail -> cells.pb({head, NULL});
+    }
 
-Column *Skip_lists::upper_bound(int value) {
-	Column *iter = head;
-	for(int level = MAX_LEVEL - 1; level >= 0; level--) {
-		while(iter->cells[level].next_column != tail && iter->cells[level].next_column->value <= value) {
-			iter = iter->cells[level].next_column;
-		}
-	}
-	return iter->cells[0].next_column;
-}
+    bool nothing(){
+        return head -> cells[0].nextCol == tail;
+    }
 
-void Skip_lists::insert(int value) {
-	Column *temp = lower_bound(value);
-	if(temp != tail && temp->value == value) {
-		return;
-	}
-	Column *inserted_column = new Column;
-	inserted_column->value = value;
-	inserted_column->cells.push_back((Cell){NULL, NULL});
-	while(inserted_column->cells.size() < MAX_LEVEL && rand() % 2 == 0) {
-		inserted_column->cells.push_back((Cell){NULL, NULL});
-	}
-	Column *iter = head;
-	for(int level = MAX_LEVEL - 1; level >= 0; level--) {
-		while(iter->cells[level].next_column != tail && iter->cells[level].next_column->value < value) {
-			iter = iter->cells[level].next_column;
-		}
-		if(level < inserted_column->cells.size()) {
-			Column *next_iter = iter->cells[level].next_column;
-			iter->cells[level].next_column = inserted_column;
-			next_iter->cells[level].previous_column = inserted_column;
-			inserted_column->cells[level].previous_column = iter;
-			inserted_column->cells[level].next_column = next_iter;
-		}
-	}
-}
+    Column *lower(int val){
+        Column *it = head;
+        FOD (i, LG - 1, 0)
+            while (it -> cells[i].nextCol != tail && it -> cells[i].nextCol -> val < val)
+                it = it -> cells[i].nextCol;
+        return it -> cells[0].nextCol;
+    }
 
-void Skip_lists::erase(int value) {
-	Column *erased_column = lower_bound(value);
-	if(erased_column == tail || erased_column->value != value) {
-		return;
-	}
-	Column *iter = head;
-	for(int level = MAX_LEVEL - 1; level >= 0; level--) {
-		while(iter->cells[level].next_column != tail && iter->cells[level].next_column->value <= value) {
-			iter = iter->cells[level].next_column;
-		}
-		if(iter == erased_column) {
-			Column *previous_iter = iter->cells[level].previous_column, *next_iter = iter->cells[level].next_column;
-			previous_iter->cells[level].next_column = next_iter;
-			next_iter->cells[level].previous_column = previous_iter;
-		}
-	}
-	delete erased_column;
-}
+    Column *upper(int val){
+        Column *it = head;
+        FOD (i, LG - 1, 0)
+            while (it -> cells[i].nextCol != tail && it -> cells[i].nextCol -> val <= val)
+                it = it -> cells[i].nextCol;
+        return it -> cells[0].nextCol;
+    }
 
-Skip_lists sl;
+    void add(int val){
+//        if skip list has unique values uncomment those lines
+//        Column *tmp = lower(val);
+//        if (tmp != tail && tmp -> val == val)
+//            return;
 
-int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	int query_type, value;
-	while(cin >> query_type) {
-		if(query_type == 0) {
-			break;
-		}
-		else if(query_type == 1) {
-			cin >> value;
-			sl.insert(value);
-		}
-		else if(query_type == 2) {
-			cin >> value;
-			sl.erase(value);
-		}
-		else if(query_type == 3) {
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				cout << sl.head->cells[0].next_column->value << "\n";
-			}
-		}
-		else if(query_type == 4) {
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				cout << sl.tail->cells[0].previous_column->value << "\n";
-			}
-		}
-		else if(query_type == 5) {
-			cin >> value;
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				Column *found_column = sl.upper_bound(value);
-				if(found_column == sl.tail) {
-					cout << "no\n";
-				}
-				else {
-					cout << found_column->value << "\n";
-				}
-			}
-		}
-		else if(query_type == 6) {
-			cin >> value;
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				Column *found_column = sl.lower_bound(value);
-				if(found_column == sl.tail) {
-					cout << "no\n";
-				}
-				else {
-					cout << found_column->value << "\n";
-				}
-			}
-		}
-		else if(query_type == 7) {
-			cin >> value;
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				Column *found_column = sl.lower_bound(value)->cells[0].previous_column;
-				if(found_column == sl.head) {
-					cout << "no\n";
-				}
-				else {
-					cout << found_column->value << "\n";
-				}
-			}
-		}
-		else {
-			cin >> value;
-			if(sl.empty()) {
-				cout << "empty\n";
-			}
-			else {
-				Column *found_column = sl.upper_bound(value)->cells[0].previous_column;
-				if(found_column == sl.head) {
-					cout << "no\n";
-				}
-				else {
-					cout << found_column->value << "\n";
-				}
-			}
-		}
-	}
-	return 0;
-}
+        Column *newCol = new Column;
+        newCol -> val = val;
+        newCol -> cells.pb({NULL, NULL});
+        while (newCol -> cells.size() < LG && rand() & 1)
+            newCol -> cells.pb({NULL, NULL});
+        Column *it = head;
+        FOD (i, LG - 1, 0){
+            while (it -> cells[i].nextCol != tail && it -> cells[i].nextCol -> val < val)
+                it = it -> cells[i].nextCol;
+            if (i < newCol -> cells.size()){
+                Column *nextIt = it -> cells[i].nextCol;
+                it -> cells[i].nextCol = newCol;
+                nextIt -> cells[i].preCol = newCol;
+                newCol -> cells[i].nextCol = nextIt;
+                newCol -> cells[i].preCol = it;
+            }
+        }
+    }
+
+    void drop(int val){
+        Column *dropCol = lower(val);
+        if (dropCol == tail || dropCol -> val != val)
+            return;
+
+        Column *it = head;
+        FOD (i, LG - 1, 0){
+            while (it -> cells[i].nextCol != tail && it -> cells[i].nextCol -> val <= val)
+                it = it -> cells[i].nextCol;
+            if (it == dropCol){
+                Column *preIt = it -> cells[i].preCol, *nextIt = it -> cells[i].nextCol;
+                preIt -> cells[i].nextCol = nextIt;
+                nextIt -> cells[i].preCol = preIt;
+				// if just delete one value then break
+            }
+        }
+        delete dropCol;
+    }
+
+    int minimum(){
+        return head -> cells[0].nextCol -> val;
+    }
+
+    int maximum(){
+        return tail -> cells[0].preCol -> val;
+    }
+} sl;
