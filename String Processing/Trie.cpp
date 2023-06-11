@@ -5,24 +5,22 @@ struct Trie {
         Node *child[AL];
         // num child and num word end at this node
         int cnt, word;
+        
+        Node() {
+            cnt = word = 0;
+            FOR (i, 0, AL - 1)
+                child[i] = NULL;
+        }
     };
 
-    Node *newNode() {
-        Node *res = new Node;
-        res -> cnt = res -> word = 0;
-        FOR (i, 0, AL - 1)
-            res -> child[i] = NULL;
-        return res;
-    }
-
-    Node *root = newNode();
+    Node *root = new Node();
 
     void add(string s){
         Node *it = root;
         for (char c : s){
             int idx = c - 'a';
             if (!it -> child[idx])
-                it -> child[idx] = newNode();
+                it -> child[idx] = new Node();
             it = it -> child[idx];
             it -> cnt++;
         }
