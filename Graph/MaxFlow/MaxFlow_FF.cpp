@@ -4,7 +4,8 @@ const int INF = 1e9 + 7;
 int numNode, numEdge, src, sink;
 vector<int> edge[MAX];
 int capacity[MAX][MAX], flow[MAX][MAX], trace[MAX], minC[MAX];
-bool vis[MAX];
+bool vis[MAX], S[MAX];
+priority_queue<pii, vector<pii>, greater<pii>> heap;
 
 void bfs(int u){
     queue<int> q;
@@ -26,7 +27,6 @@ void bfs(int u){
 bool pfs(int u){
     memset(vis, 0, sizeof(vis));
     memset(minC, 0, sizeof(minC));
-    priority_queue<pii, vector<pii>, greater<pii>> heap;
     heap.push({u, INF});
     while (heap.size()){
         auto[u, cur] = heap.top(); heap.pop();
@@ -37,12 +37,10 @@ bool pfs(int u){
             if (!vis[v] && min(cur, capacity[u][v] - flow[u][v]) > minC[v]){
                 minC[v] = capacity[u][v] - flow[u][v];
                 trace[v] = u;
-                if (v == sink)
-                    return 1;
                 heap.push({v, minC[v]});
             }
     }
-    return 0;
+    return vis[sink];
 }
 
 void increase(){
@@ -62,29 +60,32 @@ void increase(){
     }
 }
 
-void solve(){
+int maxFlow(){
     while (pfs(src))
         increase();
     int res = 0;
     for (int v : edge[src])
         res += flow[src][v];
-    cout << res;
+    return res;
 }
 
-void read(){
-    cin >> numNode >> numEdge >> src >> sink;
-    FOR (i, 1, numEdge){
-        static int u, v;
-        cin >> u >> v >> capacity[u][v];
-        edge[u].eb(v);
-        edge[v].eb(u);
+int minCut(){
+    vector<int> V;
+    S[src] = 1;
+    queue<int> q;
+    q.push(src);
+    while (q.size()){
+        int u = q.front(); q.pop();
+        for (int v : edge[u])
+            if (!S[v] && capacity[u][v] > flow[u][v])
+                S[v] = 1,
+                V.eb(v),
+                q.push(v);
     }
-}
-
-int main(){
-    int test = 1;
-//    cin >> test;
-    while (test--)
-        read(),
-        solve();
+    int res = 0;
+    for (int u : V)
+        for (int v : edge[u])
+            if (!S[v])
+                res += flow[u][v];
+    return res;
 }
