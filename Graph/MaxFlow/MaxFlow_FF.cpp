@@ -3,44 +3,25 @@ const int INF = 1e9 + 7;
 
 int numNode, numEdge, src, sink;
 vector<int> edge[MAX];
-int capacity[MAX][MAX], flow[MAX][MAX], trace[MAX], minC[MAX];
+int capacity[MAX][MAX], flow[MAX][MAX], trace[MAX];
 bool vis[MAX], S[MAX];
-priority_queue<pii, vector<pii>, greater<pii>> heap;
 
-void bfs(int u){
+bool bfs(int u){
+    memset(vis, 0, sizeof(vis));
     queue<int> q;
     q.push(u);
-    vis[u] = 1;
     while (q.size()){
         int u = q.front(); q.pop();
         for (int v : edge[u])
             if (!vis[v] && capacity[u][v] > flow[u][v]){
-                vis[v] = true;
                 trace[v] = u;
                 if (v == sink)
-                    return;
+                    return 1;
+                vis[v] = 1;
                 q.push(v);
             }
     }
-}
-
-bool pfs(int u){
-    memset(vis, 0, sizeof(vis));
-    memset(minC, 0, sizeof(minC));
-    heap.push({u, INF});
-    while (heap.size()){
-        auto[u, cur] = heap.top(); heap.pop();
-        if (vis[u])
-            continue;
-        vis[u] = 1;
-        for (int v : edge[u])
-            if (!vis[v] && min(cur, capacity[u][v] - flow[u][v]) > minC[v]){
-                minC[v] = capacity[u][v] - flow[u][v];
-                trace[v] = u;
-                heap.push({v, minC[v]});
-            }
-    }
-    return vis[sink];
+    return 0;
 }
 
 void increase(){
@@ -61,7 +42,7 @@ void increase(){
 }
 
 int maxFlow(){
-    while (pfs(src))
+    while (bfs(src))
         increase();
     int res = 0;
     for (int v : edge[src])
@@ -69,8 +50,9 @@ int maxFlow(){
     return res;
 }
 
-int minCut(){
+vector<int> minCut(){
     vector<int> V;
+    vector<pair<int, int>> res;
     S[src] = 1;
     queue<int> q;
     q.push(src);
@@ -82,10 +64,9 @@ int minCut(){
                 V.eb(v),
                 q.push(v);
     }
-    int res = 0;
     for (int u : V)
         for (int v : edge[u])
             if (!S[v])
-                res += flow[u][v];
+                res.pb({u, v});
     return res;
 }
