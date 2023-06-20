@@ -1,15 +1,28 @@
+// usage: 
+// 1. directed: flow.addEdgeDirected(u, v, c) or undirected: flow.addEdgeUndirected(u, v, c)
+// 2. flow.maxFlow(source, sink)
+
 struct MaxFlow {
     int src, sink;
     vector<int> edge[MAX];
     int capacity[MAX][MAX], flow[MAX][MAX], trace[MAX];
     bool vis[MAX];
 
-    void add(int u, int v, int c){
+    void addEdgeDirected(int u, int v, int c){
         if (c != capacity[u][v] && capacity[u][v])
             return;
         edge[u].eb(v);
         edge[v].eb(u);
         capacity[u][v] = c;
+    }
+
+    void addEdgeUndirected(int u, int v, int c){
+        if (c != capacity[u][v] && capacity[u][v])
+            return;
+        edge[u].eb(v);
+        edge[v].eb(u);
+        capacity[u][v] = c;
+        capacity[v][u] = c;
     }
 
     bool bfs(){
