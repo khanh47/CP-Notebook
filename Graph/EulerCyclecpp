@@ -1,26 +1,43 @@
-struct Edge {
-    int v, id;
-};
-
-vector<Edge> edge[MAX];
-bool used[MAX];
-list<int> eulerWalk(int u){
-    list<int> res;
-    res.pb(u);
-    while (!edge[u].empty()){
-        auto[v, id] = edge[u].back();
-        edge[u].pop_back();
-        if (used[id])
+int numNode, numEdge;
+stack<int> st;
+vector<int> edge[MAX], ec;
+int in[MAX];
+ 
+void euler(int u){
+    st.push(u);
+    while (!st.empty()){
+        int u = st.top();
+        if (edge[u].empty()){
+            st.pop();
+            ec.eb(u);
             continue;
-        used[id] = true;
-        u = v;
-        res.pb(u);
+        }
+        int v = edge[u].back();
+        st.push(v);
+        edge[u].pop_back();
     }
-
-    for (auto it = ++res.begin(); it != res.end(); it++){
-        auto tmp = eulerWalk(*it);
-        tmp.pop_back();
-        res.splice(it, tmp);
+    reverse(ALL(ec));
+}
+ 
+bool check(int u, int v){
+    if (edge[u].size() - in[u] != 1 || in[v] - edge[v].size() != 1)
+        return false;
+    FOR (i, 2, numNode - 1)
+        if (edge[i].size() != in[i])
+            return false;
+    return true;
+}
+ 
+void solve(){
+    if (!check(1, numNode)){
+        printf("IMPOSSIBLE");
+        return;
     }
-    return res;
+    euler(1);
+    if (ec.size() <= numEdge){
+        printf("IMPOSSIBLE");
+        return;
+    }
+    for (int i : ec)
+        printf("%d ", i);
 }
