@@ -2,7 +2,7 @@
 // 1. addEdge(u, posU, v, posV) (to add directed edge between u and v (if visit u then posU == 1 else posU == 0))
 // 2. init(numNode)
 // 3. build() (if build == 0 then there is no way to solve)
-// 4. res[u] == 1 if u is in graph else res[u] == 2
+// 4. query(u) == 1 if u is in graph else query(u) == 2
 // 
 // tested: https://cses.fi/problemset/task/1684
 
@@ -16,14 +16,14 @@ struct TwoSat {
     void init(int _numNode){
         numNode = _numNode;
         cnt = scc = 0;
-        edge.resize(numNode << 1);
-        adj.resize(numNode << 1);
-        num.resize(numNode << 1);
-        low.resize(numNode << 1);
-        lab.resize(numNode << 1);
-        opp.resize(numNode << 1);
-        res.resize(numNode << 1);
-        in.resize(numNode << 1);
+        edge.resize(numNode << 1 | 1);
+        adj.resize(numNode << 1 | 1);
+        num.resize(numNode << 1 | 1);
+        low.resize(numNode << 1 | 1);
+        opp.resize(numNode << 1 | 1);
+        lab.resize(numNode << 1 | 1, 0);
+        res.resize(numNode << 1 | 1, 0);
+        in.resize(numNode << 1 | 1, 0);
     }
 
     int neg(int u){
@@ -59,16 +59,6 @@ struct TwoSat {
         }
     }
 
-    bool check(){
-        FOR (i, 1, numNode){
-            if (lab[i] == lab[neg(i)])
-                return 0;
-            opp[lab[i]] = lab[neg(i)];
-            opp[lab[neg(i)]] = lab[i];
-        }
-        return 1;
-    }
-
     void link(){
         FOR (u, 1, numNode << 1)
             for (int v : edge[u])
@@ -99,9 +89,18 @@ struct TwoSat {
         FOR (i, 1, numNode << 1)
             if (!num[i])
                 dfs(i);
-        if (!check())
-            return 0;
+        FOR (i, 1, numNode){
+            if (lab[i] == lab[neg(i)])
+                return 0;
+            opp[lab[i]] = lab[neg(i)];
+            opp[lab[neg(i)]] = lab[i];
+        }
         link();
         topo();
+        return 1;
+    }
+
+    int query(int u){
+        return res[lab[u]];
     }
 } sat;
