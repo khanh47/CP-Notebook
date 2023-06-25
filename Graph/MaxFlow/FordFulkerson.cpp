@@ -66,16 +66,16 @@ struct MaxFlow {
         return res;
     }
 
-    ll minCut(int _src, int _sink){
+    vector<pii> minCut(int _src, int _sink){
         src = _src; sink = _sink;
         while (bfs())
             increase();
         bfs();
-        ll res = 0;
+        vector<pii> res;
         FOR (u, 1, numNode)
             for (int v : edge[u])
                 if (vis[u] && !vis[v] && flow[u][v])
-                    res += capacity[u][v];
+                    res.pb({u, v});
         return res;
     }
 } flow;
