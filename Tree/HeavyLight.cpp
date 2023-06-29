@@ -10,7 +10,20 @@ const int MAX = 1e5 + 7;
 
 int sz[MAX], pos[MAX], heavy[MAX], head[MAX], chain[MAX], dep[MAX], par[MAX];
 int cnt, nChain;
-struct Hld {
+struct HLD {
+    void dfs(int u){
+        sz[u] = 1;
+        for (int v : edge[u])
+            if (v != par[u]){
+                par[v] = u;
+                dep[v] = dep[u] + 1;
+                dfs(v);
+                sz[u] += sz[v];
+                if (sz[v] > sz[heavy[u]])
+                    heavy[u] = v;
+            }
+    }
+
     void build(int u){
         if (!head[nChain])
             head[nChain] = u;
@@ -25,7 +38,7 @@ struct Hld {
                 build(v);
     }
 
-    int getPoint(int a, int b){
+    int getRange(int a, int b){
         int res = 0;
         while (chain[a] != chain[b]){
             if(dep[head[chain[a]]] < dep[head[chain[b]]])
@@ -38,7 +51,7 @@ struct Hld {
         return max(res, it.get(1, 1, num, pos[a], pos[b]));;
     }
 
-    int getRange(int a, int b){
+    int getPoint(int a, int b){
         int res = 0;
         while (1){
             if (chain[a] == chain[b]){
@@ -71,18 +84,5 @@ struct Hld {
                 v = par[head[in[v]]];
         }
         return dep[u] > dep[v] ? v : u;
-    }
-
-    void dfs(int u){
-        sz[u] = 1;
-        for (int v : edge[u])
-            if (v != par[u]){
-                par[v] = u;
-                dep[v] = dep[u] + 1;
-                dfs(v);
-                sz[u] += sz[v];
-                if (sz[v] > sz[heavy[u]])
-                    heavy[u] = v;
-            }
     }
 } hld;
