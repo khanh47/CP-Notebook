@@ -1,3 +1,15 @@
+// Original Recurrence:
+// 1.
+//   dp[i] = min( dp[j] + b[j]*a[i] )  for j < i
+// Condition:
+//   b[j] >= b[j+1]
+//   a[i] <= a[i+1]
+// 2.
+//   dp[i] = max( dp[j] + b[j]*a[i] )  for j < i
+// Condition:
+//   b[j] <= b[j+1]
+//   a[i] <= a[i+1]
+
 struct ConvexHullTrick {
     #define Line pair<ll, ll>
     vector<Line> env;
