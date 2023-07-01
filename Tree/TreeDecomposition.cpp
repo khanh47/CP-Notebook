@@ -1,4 +1,5 @@
 // test:
+// use when there are Q queries and each query has N node of tree and sum of N in Q queries <= 1e5
 // https://oj.vnoi.info/problem/fc077_grcolor2
 // https://oj.vnoi.info/problem/fct018_grcolor2 
 // in[a] = timeDfs of node a by euler tour
