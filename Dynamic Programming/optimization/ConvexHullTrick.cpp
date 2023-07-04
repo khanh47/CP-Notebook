@@ -11,6 +11,7 @@
 //   a[i] <= a[i+1]
 
 struct ConvexHullTrick {
+    
     #define Line pair<ll, ll>
     vector<Line> env;
     int idx = 0;
@@ -23,6 +24,13 @@ struct ConvexHullTrick {
         return (double) (b.se - a.se) * (a.fi - c.fi) >= (double) (c.se - a.se) * (a.fi - b.fi);
     }
 
+    void add(ll a, ll b){
+        Line newLine = Line(a, b);
+        while (env.size() >= 2 && bad(env[env.size() - 2], env[env.size() - 1], newLine))
+            env.pop_back();
+        env.pb(newLine);
+    }
+
     ll getMin(ll x){
         int sz = env.size();
         if (idx >= sz)
@@ -30,12 +38,5 @@ struct ConvexHullTrick {
         while (idx < sz - 1 && ord(env[idx + 1], x) <= ord(env[idx], x))
             idx++;
         return ord(env[idx], x);
-    }
-
-    void add(ll a, ll b){
-        Line newLine = Line(a, b);
-        while (env.size() >= 2 && bad(env[env.size() - 2], env[env.size() - 1], newLine))
-            env.pop_back();
-        env.pb(newLine);
     }
 } cht;
