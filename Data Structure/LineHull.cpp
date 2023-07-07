@@ -23,19 +23,17 @@ struct LineHull {
     }
 
     ll getMin(ll coord) {
-        int left = 0, right = top - 1;
-        ll res = ord(env[left], coord);
+        int left = 0, right = env.size() - 1;
+        int res = 0;
         while (left < right){
             int mid = (left + right) >> 1;
-            ll x = ord(env[mid], coord);
-            ll y = ord(env[mid + 1], coord);
-            if (x > y)
-                left = mid + 1;
+            if (ord(env[mid], coord) > ord(env[mid + 1], coord))
+                left = mid + 1,
+                res = left;
             else
                 right = mid;
-            res = min(res, min(x, y));
         }
-        return res;
+        return ord(env[res], coord);
     }
 
     void add(ll a, ll b){
