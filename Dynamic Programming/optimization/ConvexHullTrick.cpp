@@ -1,4 +1,4 @@
-// Original Recurrence:
+// Condition:
 // 1.
 //   dp[i] = min( dp[j] + b[j]*a[i] )  for j < i
 // Condition:

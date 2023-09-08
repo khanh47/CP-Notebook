@@ -27,7 +27,7 @@ template<class X, class Y> bool maximize(X &x, Y y){ if (x < y){ x = y; return t
 template<class X, class Y> bool minimize(X &x, Y y){ if (x > y){ x = y; return true; } return false; }
 
 #define  gogobruhbruh  ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
-#define  file(name)  if (fopen (name".inp", "r")) { freopen (name".inp", "r", stdin); freopen (name".out", "w", stdout); }
+#define  file(name)  if (fopen (name".inp", "r")) { freopen (name".inp", "r", stdin); freopen (name".ans", "w", stdout); }
 
 const int MOD = 1e9 + 7;
 

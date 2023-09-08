@@ -6,6 +6,8 @@
 // - https://judge.yosupo.jp/problem/point_add_range_sum
 // - https://judge.yosupo.jp/problem/point_set_range_composite
 
+const int MAX = 1e5 + 7;
+
 struct IntervalTree {
     struct node {
         int code, num;

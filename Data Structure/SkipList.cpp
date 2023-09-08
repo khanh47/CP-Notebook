@@ -1,6 +1,6 @@
 // Tested: 
 // https://oj.vnoi.info/problem/cppset 
-// Wanna get more clear code? go to this link
+// Wanna get another code? go to this link
 // https://ideone.com/53t3Eh
 
 const int LG = 20;
