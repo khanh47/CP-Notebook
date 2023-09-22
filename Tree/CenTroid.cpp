@@ -38,13 +38,12 @@ struct CD {
  
     void build(int u, int pre){
         dfs(u, -1);
-        int n = sz[u];
-        int root = centroid(u, -1, n >> 1);
-        dfs2(root, par[root] = pre, 0, root);
-        del[root] = 1;
-        for (int v : edge[root])
+        u = centroid(u, -1, sz[u] >> 1);
+        dfs2(u, par[u] = pre, 0, u);
+        del[u] = 1;
+        for (int v : edge[u])
             if (!del[v])
-                build(v, root);
+                build(v, u);
     }
  
     void update(int u){
