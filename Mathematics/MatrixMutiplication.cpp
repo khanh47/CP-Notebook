@@ -1,29 +1,36 @@
-#define Matrix vector<vector<int>>
-#define row(a) a.size()
-#define col(a) a[0].size()
-#define init(r, c) Matrix(r, vector<int>(c, 0))
+const int MAX = 100;
 
-Matrix identity(int n){
-    Matrix res = init(n, n);
-    while (n--) res[n][n] = 1;
-    return res;
-}
+struct matrix {
+    int a[MAX][MAX];
+    int row, col;
 
-Matrix muti(Matrix a, Matrix b){
-    assert(col(a) == row(b));
-    Matrix res = init(row(a), col(b));
-    FOR (i, 0, row(a) - 1)
-        FOR (j, 0, col(b) - 1)
-            FOR (k, 0, col(a) - 1)
-                add(res[i][j], muti(a[i][k], b[k][j]));
-    return res;
-}
+    void init(int _row, int _col){
+        row = _row; col = _col;
+        FOR (i, 0, row - 1)
+            FOR (j, 0, col - 1)
+                a[i][j] = 0;
+    }
 
-Matrix pow(Matrix a, ll b){
-    assert(row(a) == col(a));
-    Matrix res = identity(row(a));
-    for (; b; b >>= 1, a = muti(a, a))
+    matrix operator * (const matrix &b) const {
+        // assert(col == b.row);
+        matrix res;
+        res.init(row, b.col);
+        FOR (i, 0, row - 1)
+            FOR (j, 0, res.col - 1)
+                FOR (k, 0, col - 1)
+                    add(res.a[i][j], muti(a[i][k], b.a[k][j]));
+        return res;
+    }
+};
+
+matrix pow(matrix a, ll b){
+    // assert(a.row == a.col);
+    matrix res;
+    res.init(a.row, a.col);
+    FOR (i, 0, res.row - 1)
+        res.a[i][i] = 1;
+    for (; b; b >>= 1, a = a * a)
         if (b & 1)
-            res = muti(res, a);
+            res = res * a;
     return res;
 }

@@ -1,23 +1,32 @@
-// note:
-// use inp instead of cout 
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
+
 #define FOR(i,a,b) for (int i = (a), _b = (b); i <= _b; i++)
-#define FOD(i,b,a) for (int i = (b), _a = (a); i >= _a; i--)
+#define FOD(i,a,b) for (int i = (a), _b = (b); i >= _b; i--)
+#define DEBUG(n, a) FOR (i, 1, n) cout << a[i] << ' '; cout << endl;
+#define ll long long
 
-ofstream inp("main.inp");
+// weak random value but strong accuracy
 
-int ran(int l, int r)
-{
-	return l + (rand() % (r - l + 1));
+int ran(int l, int r){
+    assert(l <= r);
+    return l + rand() % (r - l + 1);
 }
 
-#define MAX 100
+mt19937 rd()
+mt19937 rd(chrono::steady_clock_now()::time_since_epoch().count());
+
+#define rand rd
+
+// strong random value but weak accuracy 
+// (often generate 0 although we use Ran(1, n) with n >= 1)
+ll Ran(ll l, ll r){
+    assert(l <= r);
+    return abs(l + rd() * 1LL * rd() % (r - l + 1));
+}
 
 int main(){
-
-	srand(time(0));
-    // gen part here
-    inp.close();
-	return 0;
+    ofstream inp(NAME".inp");
+    // generate input code goes here
 }

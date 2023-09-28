@@ -1,36 +1,22 @@
 #include <bits/stdc++.h>
-#define FOR(i, a, b) for (int i = (a), _b = (b); i <= _b; i++)
-#define ll long long
+
 using namespace std;
+
+#define FOR(i,a,b) for (int i = (a), _b = (b); i <= _b; i++)
+#define out(i, v) cout << "Test " << i << ": " << (v ? "AC\n" : "WA\n");
 #define NAME "main"
-const int NTEST = 1000;
-const int INF = 5e6;
 
-mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());
-#define rand rd
+const int TEST = 1e2;
 
-// Viết lại hàm random để sử dụng cho thuận tiện. Hàm random này sinh ngẫu nhiên số trong phạm vi long long, số sinh ra >= l và <= h.
-long long Rand(long long l, long long h) {
-    assert(l <= h);
-    return abs(l + rd() * 1LL * rd() % (h - l + 1));
-}
-
-const int MAX = 1e4;
-
-int main()
-{
-    srand(time(NULL));
-    for (int iTest = 1; iTest <= NTEST; iTest++)
-    {
+int main(){
+    FOR (i, 1, TEST){
         system(NAME"_gen.exe");
         system(NAME".exe");
         system(NAME"_brute.exe");
-        if (system("fc " NAME".out " NAME".ans") != 0)
-        {
-            cout << "Test " << iTest << ": WRONG!\n";
+        if (system("fc " NAME".out " NAME".ans")){
+            out(i, 0);
             return 0;
         }
-        cout << "Test " << iTest << ": CORRECT!\n";
+        out(i, 1);
     }
-    return 0;
 }
