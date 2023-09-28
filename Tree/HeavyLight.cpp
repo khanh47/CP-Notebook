@@ -10,6 +10,7 @@ const int MAX = 1e5 + 7;
 
 int sz[MAX], pos[MAX], heavy[MAX], head[MAX], chain[MAX], dep[MAX], par[MAX];
 int cnt, nChain;
+
 struct HLD {
     void dfs(int u){
         sz[u] = 1;
@@ -38,7 +39,7 @@ struct HLD {
                 build(v);
     }
 
-    int getRange(int a, int b){
+    int get(int a, int b){
         int res = 0;
         while (chain[a] != chain[b]){
             if(dep[head[chain[a]]] < dep[head[chain[b]]])
@@ -49,19 +50,6 @@ struct HLD {
         if(dep[a] > dep[b])
             swap(a, b);
         return max(res, it.get(1, 1, num, pos[a], pos[b]));;
-    }
-
-    int getPoint(int a, int b){
-        int res = 0;
-        while (1){
-            if (chain[a] == chain[b]){
-                res += it.get(1, 1, num, pos[a], pos[b]);
-                break;
-            }
-            res += it.get(1, 1, num, pos[head[chain[b]]], pos[b]);
-            b = par[head[chain[b]]];
-        }
-        return res;
     }
 
     void update(int a, int b){
