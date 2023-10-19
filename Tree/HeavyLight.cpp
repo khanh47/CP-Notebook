@@ -65,7 +65,7 @@ struct HLD {
     }
 
     int lca(int u, int v) {
-        while (in[u] != in[v]){
+        while (chain[u] != chain[v]){
             if (dep[head[in[u]]] > dep[head[in[v]]])
                 u = par[head[in[u]]];
             else
