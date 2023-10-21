@@ -1,5 +1,5 @@
-const int MAX = 2e5 + 7;
-const int S = 34e2; // pow(MAX, 2 / 3)
+const int MAX = 1e5 + 7;
+const int S = 34e2; // pow(MAX, 0.71) (best complexity)
 
 int num, query, l, r, cur;
 int a[MAX], last[MAX];
