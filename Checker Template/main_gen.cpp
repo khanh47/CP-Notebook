@@ -14,8 +14,7 @@ int ran(int l, int r){
     return l + rand() % (r - l + 1);
 }
 
-mt19937 rd()
-mt19937 rd(chrono::steady_clock_now()::time_since_epoch().count());
+mt19937 rd(chrono::steady_clock::now()::time_since_epoch().count());
 
 #define rand rd
 
@@ -27,6 +26,7 @@ ll Ran(ll l, ll r){
 }
 
 int main(){
+    srand(time(NULL));
     ofstream inp(NAME".inp");
     // generate input code goes here
 }
