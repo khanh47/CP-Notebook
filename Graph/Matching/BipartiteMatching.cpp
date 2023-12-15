@@ -1,3 +1,4 @@
+// Complexity: O(E.V)
 int numX, numY, numEdge;
 int matchX[MAX], matchY[MAX], trace[MAX];
 vector<int> edge[MAX];

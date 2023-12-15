@@ -11,7 +11,6 @@
 //   a[i] <= a[i+1]
 
 struct ConvexHullTrick {
-    
     #define Line pair<ll, ll>
     vector<Line> env;
     int idx = 0;

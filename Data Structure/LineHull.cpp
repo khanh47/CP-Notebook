@@ -1,5 +1,6 @@
 /*
  * Complexity: O(N, logN)
+ * Condition: a * x + b (min)
  * Problems:
  * 1. http://codeforces.com/contest/631/problem/E
  * 2. http://codeforces.com/contest/660/problem/F

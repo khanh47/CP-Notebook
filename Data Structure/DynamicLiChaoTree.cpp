@@ -56,9 +56,8 @@ struct DynamicLiChaoTree {
     ll get(Node *it, int left, int right, int x){
         if (!it)
             return INF;
-        if (left == right){
+        if (left == right)
             return it -> L.ord(x);
-        }
         int mid = (left + right) >> 1;
         if (x <= mid){
             return min(it -> L.ord(x), get(it -> l, left, mid, x));

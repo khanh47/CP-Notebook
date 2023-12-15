@@ -20,8 +20,9 @@ void euler(int u){
 }
  
 bool check(int u, int v){
-    if (edge[u].size() - in[u] != 1 || in[v] - edge[v].size() != 1)
-        return false;
+    // euler path
+    // if (edge[u].size() - in[u] != 1 || in[v] - edge[v].size() != 1)
+    //     return false;
     FOR (i, 2, numNode - 1)
         if (edge[i].size() != in[i])
             return false;

@@ -49,8 +49,6 @@ void solve(){
             update(l++, -1);
         while (r > R)
             update(r--, -1);
-        l = L;
-        r = R;
         res[idx] = cur;
     }
     FOR (i, 1, query)
