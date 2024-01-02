@@ -2,11 +2,10 @@
 
 using namespace std;
 
-#define FOR(i,a,b) for (int i = (a), _b = (b); i <= _b; i++)
-#define out(i, v) cout << "Test " << i << ": " << (v ? "AC\n" : "WA\n");
+#define FOR(i,a,b) for (int i = (a), _b = (b); i <= b; i++)
 #define NAME "main"
 
-const int TEST = 1e2;
+const int TEST = 100;
 
 int main(){
     FOR (i, 1, TEST){
@@ -14,9 +13,9 @@ int main(){
         system(NAME".exe");
         system(NAME"_brute.exe");
         if (system("fc " NAME".out " NAME".ans")){
-            out(i, 0);
+            cout << "test: " << i << " WA\n";
             return 0;
         }
-        out(i, 1);
+        cout << "test: " << i << " AC\n";
     }
 }
