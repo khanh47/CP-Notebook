@@ -6,34 +6,33 @@
 //   with a < b ≤ c < d.
 
 const int MAX = 1e5 + 7;
-const ll INF = 1e18 + 7;
 
 int num;
 int a[MAX], b[MAX];
 ll dp[MAX];
 
-struct Data {
+struct state {
     int l, r, p;
 };
 
-deque<Data> dq;
+deque<state> dq;
 
-ll calc(int j, int i){
+ll cost(int j, int i){
     return 1LL * b[j] * a[i];
 }
 
 void update(int i){
-    auto &[l, r, p] = dq.back();
-    int left = l, right = r, pos = r + 1;
-    while (left <= right){
-        int mid = (left + right) >> 1;
-        if (dp[i] + calc(i, mid) < dp[p] + calc(p, mid)){
-            pos = mid;
-            right = mid - 1;
-        }else
-            left = mid + 1;
+    auto [l, r, p] = dq.back();
+    int pos = r + 1;
+    while (l <= r){
+        int mid = (l + r) >> 1;
+        if (dp[i] + cost(i, mid) < dp[p] + cost(p, mid))
+            pos = mid,
+            r = mid - 1;
+        else
+            l = mid + 1;
     }
-    r = pos - 1;
+    dq.back().r = pos - 1;
     if (pos <= num)
         dq.pb({pos, num, i});
 }
@@ -41,13 +40,12 @@ void update(int i){
 void solve(){
     dq.pb({2, num, 1});
     FOR (i, 2, num){
-        dp[i] = dp[dq.front().p] + calc(dq.front().p, i);
-        dq.front().l++;
-        if (dq.front().l > dq.front().r)
-            dq.pop_front();
+        auto &[l, r, p] = dq.front();
+        dp[i] = dp[p] + cost(p, i);
+        if (++l > r) dq.pop_front();
         while (dq.size()){
             auto [l, r, p] = dq.back();
-            if (dp[i] + calc(i, l) < dp[p] + calc(p, l))
+            if (dp[i] + cost(i, l) < dp[p] + cost(p, l))
                 dq.pop_back();
             else
                 break;
