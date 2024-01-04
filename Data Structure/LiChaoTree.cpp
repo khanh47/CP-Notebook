@@ -4,12 +4,7 @@ const int MAX = 1e6;
 struct Line {
     ll a, b;
 
-    Line() {
-        a = 0;
-        b = INF;
-    }
-
-    Line(ll _a, ll _b){
+    Line(ll _a = 0, ll _b = INF){
         a = _a; b = _b;
     }
 
