@@ -16,48 +16,54 @@
 // - https://oj.vnoi.info/problem/lis2vn
 
 struct BIT2D {
-    // nodes[x] contains all relevant y coordinates
-    vector<vector<int>> nodes, bit;
-    int sz;
-
-    void init(int n){
-        sz = n;
-        nodes.resize(sz + 5);
-        bit.resize(sz + 5);
-    }
-
-    void initNodes(){
-        for (int i = 1; i <= sz; i++){
-            nodes[i].push_back(INF);
-            sort(nodes[i].begin(), nodes[i].end());
-            nodes[i].erase(unique(nodes[i].begin(), nodes[i].end()), nodes[i].end());
-            bit[i].resize(nodes[i].size() + 1);
-        }
-    }
+    vector<int> tree[MAX], nodes[MAX];
 
     void fakeUpdate(int x, int y){
-        for (; x <= sz; x += x & (-x))
-            nodes[x].push_back(y);
+        for (int a = x; a <= num; a += a & (-a))
+            for (int b = y; b <= num; b += b & (-b))
+                nodes[a].eb(b);
     }
 
     void fakeGet(int x, int y){
-        for (; x > 0; x -= x & (-x))
-            nodes[x].push_back(y);
+        if (!x || !y) return;
+        for (int a = x; a; a -= a & (-a))
+            for (int b = y; b; b -= b & (-b))
+                nodes[a].eb(b);
     }
 
-    // point (u, v) += val
-    void update(int u, int v, int val){
-        for (int x = u; x <= sz; x += x & (-x))
-            for (int y = lower_bound(nodes[x].begin(), nodes[x].end(), v) - nodes[x].begin() + 1; y <= (int) nodes[x].size(); y += y & (-y))
-                bit[x][y] += val;
+    void fakeGet(int x, int y, int xx, int yy){
+        fakeGet(xx, yy); fakeGet(xx, y - 1); fakeGet(x - 1, yy); fakeGet(x - 1, y - 1);
     }
 
-    // Get sum of point in rectangle with corners at (1, 1) and (u, v)
-    int get(int u, int v){
+    void build(){
+        FOR (i, 1, num){
+            if (nodes[i].empty()) continue;
+            sort(ALL(nodes[i]));
+            nodes[i].resize(unique(ALL(nodes[i])) - nodes[i].begin());
+            tree[i].resize(nodes[i].size());
+        }
+    }
+
+    int Find(int a, int b){
+        return lower_bound(ALL(nodes[a]), b) - nodes[a].begin() + 1;
+    }
+
+    void update(int x, int y, int val){
+        for (int a = x; a <= num; a += a & (-a))
+            for (int b = Find(a, y); b <= nodes[a].size(); b += b & (-b))
+                tree[a][b - 1] += val;
+      }
+
+      int get(int x, int y){
+          if (!x || !y) return 0;
         int res = 0;
-        for (int x = u; x; x -= x & (-x))
-            for (int y = upper_bound(nodes[x].begin(), nodes[x].end(), v) - nodes[x].begin(); y; y -= y & (-y))
-                res += bit[x][y];
-        return res;
+        for (int a = x; a; a -= a & (-a))
+            for (int b = Find(a, y); b; b -= b & (-b))
+                res += tree[a][b - 1];
+         return res;
+     }
+
+     int get(int x, int y, int xx, int yy){
+         return get(xx, yy) - get(xx, y - 1) - get(x - 1, yy) + get(x - 1, y - 1);
     }
-} tree;
+} bit;
