@@ -52,10 +52,10 @@ struct BIT2D {
         for (int a = x; a <= num; a += a & (-a))
             for (int b = Find(a, y); b <= nodes[a].size(); b += b & (-b))
                 tree[a][b - 1] += val;
-      }
+    }
 
-      int get(int x, int y){
-          if (!x || !y) return 0;
+    int get(int x, int y){
+        if (!x || !y) return 0;
         int res = 0;
         for (int a = x; a; a -= a & (-a))
             for (int b = Find(a, y); b; b -= b & (-b))

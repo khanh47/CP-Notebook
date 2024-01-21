@@ -15,7 +15,7 @@
 //
 //      Đường đi euler: 
 // Các đỉnh có bậc khác 0 của đồ thị liên thông với nhau
-// Tồn tại 2 đỉnh u, v mà deg+(u) – deg-(u) = 1 và deg-(v) – deg+(v) = 1 và mọi đỉnh còn lại đều có bán bậc ra = bán bậc vào. Khi đó, đường đi sẽ bắt đầu từ đỉnh u và kết thúc ở đỉnh v.
+// Tồn tại 2 đỉnh u, v mà deg+(u) – deg-(u) = 1 và deg+(u) – deg-(u) = 1 và mọi đỉnh còn lại đều có bán bậc ra = bán bậc vào. Khi đó, đường đi sẽ bắt đầu từ đỉnh u và kết thúc ở đỉnh v.
 
 int numNode, numEdge;
 stack<int> st;
